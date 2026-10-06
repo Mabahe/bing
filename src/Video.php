@@ -48,10 +48,15 @@ class Video extends Bing
     public function parseContent()
     {
         $results = $this->crawler
-            ->filter(".mc_fgvc_u")
+            ->filter(".mc_vtvc")
             ->each(function (Crawler $node, $i) {
                 $json_node = $node->filter('.vrhdata');
-                $json = json_decode($json_node->attr("vrhm"), true);                
+
+                if (!$json_node->count()) {
+                    return null;
+                }
+
+                $json = json_decode($json_node->attr("vrhm"), true);
                 $title = $json["vt"];
 
                 $duration = $json["du"];
@@ -72,7 +77,7 @@ class Video extends Bing
                 $link = $json["murl"];
                 $query = parse_url($link, PHP_URL_QUERY);
 
-                if ($query !== false) {
+                if (is_string($query)) {
                     parse_str($query, $vquery);
                     if (!empty($vquery["v"])) {
                         $item["link"] =
@@ -96,6 +101,6 @@ class Video extends Bing
                 return $item;
             });
 
-        return $results;
+        return array_values(array_filter($results));
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Bing: makan nasi</title>
+    <link>https://www.bing.com:443/search?q=makan+nasi</link>
+    <description>Suchergebnisse</description>
+    <item>
+      <title>Nasi Goreng Rezept</title>
+      <link>https://example.com/nasi-goreng</link>
+      <description>So gelingt Nasi Goreng.</description>
+      <pubDate>Mon, 05 Oct 2026 10:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Nasi Uduk</title>
+      <link>https://example.org/nasi-uduk</link>
+      <description>Kokosreis aus Jakarta.</description>
+      <pubDate>Sun, 04 Oct 2026 08:30:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Nasi Campur</title>
+      <link>https://example.net/nasi-campur</link>
+    </item>
+  </channel>
+</rss>

@@ -13,7 +13,7 @@ class Image extends Bing
 
     public function getContent()
     {
-        $response = $this->client->get($this->prefix, [
+        $response = $this->client->request("GET", $this->prefix, [
             "query" => [
                 "q" => trim($this->fullQuery),
                 // 'adlt' => 'strict',
@@ -64,10 +64,7 @@ class Image extends Bing
             }
         });
 
-        $results = collect($results)
-            ->filter()
-            ->unique("url")
-            ->toArray();
+        $results = $this->uniqueByUrl(array_filter($results));
 
         $related = $this->crawler
             ->filter("a > div.cardInfo > div > strong")
@@ -108,9 +105,9 @@ class Image extends Bing
                 : $raw_image["filetype"];
 
         // Check if filetype is successfully extracted
-        if(str($raw_image["filetype"])->length() > 5){
+        if (mb_strlen($raw_image["filetype"]) > 5) {
             // filetype length is usually 3-5 chars, lets find it from URL;
-            $raw_image["filetype"] = str($raw_image['url'])->afterLast('.')->before('?')->toString();
+            $raw_image["filetype"] = $this->extensionFromUrl($raw_image["url"]);
         }
 
         try {
@@ -129,6 +126,39 @@ class Image extends Bing
         $raw_image["domain"] = parse_url($raw_image["link"], PHP_URL_HOST);
 
         return $raw_image;
+    }
+
+    /**
+     * Removes entries with a duplicate "url" (first one wins, keys are kept).
+     */
+    protected function uniqueByUrl(array $items)
+    {
+        $seen = [];
+        $unique = [];
+
+        foreach ($items as $key => $item) {
+            if (isset($seen[$item["url"]])) {
+                continue;
+            }
+
+            $seen[$item["url"]] = true;
+            $unique[$key] = $item;
+        }
+
+        return $unique;
+    }
+
+    /**
+     * Part after the last "." and before the first "?" of the remainder.
+     */
+    protected function extensionFromUrl($url)
+    {
+        $pos = strrpos($url, ".");
+        $extension = $pos === false ? $url : substr($url, $pos + 1);
+
+        $pos = strpos($extension, "?");
+
+        return $pos === false ? $extension : substr($extension, 0, $pos);
     }
 
     public function getImages()

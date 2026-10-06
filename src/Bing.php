@@ -15,6 +15,8 @@ class Bing
     public $content = null;
     public $filters = null;
     public $options = null;
+    public $userAgent =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36";
 
     public $query_filters = [
         "image" => [
@@ -82,8 +84,7 @@ class Bing
             "verify" => false,
             "http_errors" => false,
             "headers" => [
-                "User-Agent" =>
-                    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36",
+                "User-Agent" => $this->userAgent,
             ],
         ]);
     }

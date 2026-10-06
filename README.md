@@ -139,3 +139,11 @@ $videos = $videoScraper->scrape('om telolet om');
 
 ```
 
+
+## Tests
+
+```
+composer install
+vendor/bin/kahlan                    # offline specs (fixtures, no network)
+vendor/bin/kahlan --spec=spec-live   # live specs against bing.com (may be flaky)
+```

@@ -12,7 +12,7 @@ class Web extends Bing
 
 	public function getContent()
 	{
-		$response = $this->client->get($this->prefix, [
+		$response = $this->client->request('GET', $this->prefix, [
 			'query' => array_merge([
 					'q' => trim($this->fullQuery),
 					'format' => 'rss'
@@ -32,6 +32,16 @@ class Web extends Bing
 		return str_replace('pubDate>', 'pubdate>', $content);
 	}
 
+	/**
+	 * Text of the first matching child node, or '' if bing left it out.
+	 */
+	protected function nodeText(Crawler $item, $selector)
+	{
+		$node = $item->filter($selector);
+
+		return $node->count() ? $node->text() : '';
+	}
+
 	public function parseContent()
 	{
 		$results = [];
@@ -44,10 +54,10 @@ class Web extends Bing
 			$c = new Crawler($node);
 
 			$result = [
-				'title' => $c->filter('title')->text(),
-				'link' => $c->filter('link')->text(),
-				'description' => $c->filter('description')->text(),
-				'pubdate' => $c->filter('pubdate')->text(),
+				'title' => $this->nodeText($c, 'title'),
+				'link' => $this->nodeText($c, 'link'),
+				'description' => $this->nodeText($c, 'description'),
+				'pubdate' => $this->nodeText($c, 'pubdate'),
 			];
 
 			$results[] = $result;
